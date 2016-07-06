@@ -4,70 +4,58 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.ArrayList;
 
-
-
 public class SmartHome {
-    static int testAC = 0;
-    
     ArrayList<Appliance> list = new ArrayList<Appliance>();
     public static void main(String... args) {
         SmartHome s = new SmartHome();
-        
         AirConditioner airConditioner = new AirConditioner();
         WaterHeater waterHeater = new WaterHeater();
         CookingOven cookingOven = new CookingOven();
         s.list.add(airConditioner);
         s.list.add(waterHeater);
         s.list.add(cookingOven);
-        airConditioner.ScheduleEvent(airConditioner, s ,10);
-    }
-			    
+        s.list.get(0).ScheduleEvent(s.list.get(0),10);
+        s.list.get(1).ScheduleEvent(s.list.get(1),10);
+        s.list.get(2).ScheduleEvent(s.list.get(2),10);
+        s.list.get(0).ScheduleEvent(s.list.get(0), 15);
+        s.list.get(1).ScheduleEvent(s.list.get(1), 15);
+        s.list.get(2).ScheduleEvent(s.list.get(2), 15);
+    }   
 
 }
-
 class Appliance {
-    public boolean state = false;
-
-    public void ScheduleEvent(Appliance modifiedAppliance, SmartHome s, long delayTime) {
-        TimerTask tasknew = new MyTimerTask(modifiedAppliance,s);
+    boolean state = false;
+    public void ScheduleEvent(Appliance modifiedAppliance, long delayTime) {
+        TimerTask tasknew = new MyTimerTask(modifiedAppliance);
         Timer timer = new Timer();
         timer.schedule(tasknew, delayTime); 
-        return;
     }
     
 }
-
 class MyTimerTask extends TimerTask {
     Appliance appliance = new Appliance();
-        SmartHome s = new SmartHome();
-    public MyTimerTask(Appliance modifiedAppliance, SmartHome s) {
-        this.appliance = modifiedAppliance;
-        this.s = s;
-
+    public MyTimerTask(Appliance modifiedAppliance) {
+        appliance = modifiedAppliance;
     }
     
     public void run() {
-        appliance.state = true;
         if(appliance.state == true)
-        {
-            s.list.get(0).state = true;
-        }
-        return;
+            appliance.state = false;
+        else
+            appliance.state = true;
+
     }
 }
-
 class AirConditioner extends Appliance {
     public AirConditioner() {
         super();
     }
 }
-
 class CookingOven extends Appliance {
     public CookingOven() {
         super();
     }
 }
-
 class WaterHeater extends Appliance {
     public WaterHeater() {
         super();
