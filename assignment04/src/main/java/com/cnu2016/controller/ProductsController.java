@@ -60,7 +60,7 @@ public class ProductsController {
     @RequestMapping(value="/api/products/{pk}", method=RequestMethod.PUT)
     public ResponseEntity putProduct(@PathVariable int pk, @RequestBody ProductSerializer productSerializer) {
         ProductSerializer p = repository.findOne(pk);
-        if(p == null) {
+        if(p == null || p.getIs_available() == false) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
@@ -83,7 +83,7 @@ public class ProductsController {
     @RequestMapping(value="/api/products/{pk}", method=RequestMethod.PATCH)
     public ResponseEntity patchProduct(@PathVariable int pk, @RequestBody ProductSerializer productSerializer) {
         ProductSerializer p = repository.findOne(pk);
-        if(p == null) {
+        if(p == null || p.getIs_available() == false) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
@@ -110,7 +110,7 @@ public class ProductsController {
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
-            p.setIs_available(true);
+            p.setIs_available(false);
             ProductSerializer productSerializer1 = repository.save(p);
             return ResponseEntity.status(HttpStatus.OK).body("");
         }
