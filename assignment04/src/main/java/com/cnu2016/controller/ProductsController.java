@@ -29,19 +29,18 @@ public class ProductsController {
     }
 
    @RequestMapping(value="/api/products/{id}", method=RequestMethod.GET)
-    public ResponseEntity getOne(@PathVariable int id) {
-        try {
+    public ResponseEntity getOne(@PathVariable Integer id) {
             ProductSerializer p = repository.findOne(id);
-            if (p == null || p.getIs_available() == false) {
+            System.out.println(p);
+            if (p == null) {
                 Map<String, String> detailObject = new HashMap<String, String>();
                 detailObject.put("detail", "Not found.");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
-            } else {
-                return ResponseEntity.status(HttpStatus.OK).body(p);
             }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
-        }
+       if(p.getIs_available() == 0)
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+       return ResponseEntity.status(HttpStatus.OK).body(p);
+
     }
 
     @RequestMapping(value="/api/products", method=RequestMethod.POST)
@@ -51,66 +50,66 @@ public class ProductsController {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Code field empty");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
-        } else {
-            ProductSerializer p = repository.save(productSerializer);
-            return ResponseEntity.status(HttpStatus.CREATED).body(p);
         }
+        ProductSerializer p = repository.save(productSerializer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(p);
+
     }
 
     @RequestMapping(value="/api/products/{pk}", method=RequestMethod.PUT)
-    public ResponseEntity putProduct(@PathVariable int pk, @RequestBody ProductSerializer productSerializer) {
+    public ResponseEntity putProduct(@PathVariable Integer pk, @RequestBody Map<String, String> map) {
         ProductSerializer p = repository.findOne(pk);
-        if(p == null || p.getIs_available() == false) {
+        if(p == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
-        } else if(productSerializer.getCode() == null) {
+        }
+        if(p.getIs_available() != 1)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        if(map.get("code") == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Code field empty");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
-            p.setBuy_price(productSerializer.getBuy_price());
-            p.setCode(productSerializer.getCode());
-            p.setDescription(productSerializer.getDescription());
-            p.setQuantity(productSerializer.getQuantity());
-            p.setProduct_name(productSerializer.getProduct_name());
-            p.setSell_price(productSerializer.getSell_price());
+            p.setCode(map.get("code"));
+            p.setDescription(map.get("description"));
             ProductSerializer productSerializer1 = repository.save(p);
             return ResponseEntity.status(HttpStatus.CREATED).body(productSerializer1);
         }
     }
 
     @RequestMapping(value="/api/products/{pk}", method=RequestMethod.PATCH)
-    public ResponseEntity patchProduct(@PathVariable int pk, @RequestBody ProductSerializer productSerializer) {
+    public ResponseEntity patchProduct(@PathVariable Integer pk, @RequestBody ProductSerializer productSerializer) {
         ProductSerializer p = repository.findOne(pk);
-        if(p == null || p.getIs_available() == false) {
+        if(p == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
-        } else {
-            String code = productSerializer.getCode();
-            String description = productSerializer.getDescription();
-            if(code != null) {
-                p.setCode(code);
-            }
-            if(description != null) {
-                p.setDescription(description);
-            }
-            ProductSerializer productSerializer1 = repository.save(p);
-            return ResponseEntity.status(HttpStatus.CREATED).body(productSerializer1);
-
         }
+        if(p.getIs_available() != 1)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        String code = productSerializer.getCode();
+        String description = productSerializer.getDescription();
+        if(code != null) {
+            p.setCode(code);
+        }
+        if(description != null) {
+            p.setDescription(description);
+        }
+        ProductSerializer productSerializer1 = repository.save(p);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productSerializer1);
+
     }
 
     @RequestMapping(value="/api/products/{pk}", method=RequestMethod.DELETE)
-    public ResponseEntity deleteProduct(@PathVariable int pk) {
+    public ResponseEntity deleteProduct(@PathVariable Integer pk) {
         ProductSerializer p = repository.findOne(pk);
         if(p == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
-            p.setIs_available(false);
+            p.setIs_available(0);
             ProductSerializer productSerializer1 = repository.save(p);
             return ResponseEntity.status(HttpStatus.OK).body("");
         }
