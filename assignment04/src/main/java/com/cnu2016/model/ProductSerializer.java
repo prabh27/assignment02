@@ -24,7 +24,7 @@ public class ProductSerializer {
     private Double buy_price;
     private Double sell_price;
     private Double quantity;
-    private Boolean is_available;
+    private Boolean is_available = true;
 
     public void setId(Integer id) {
         this.id = id;
