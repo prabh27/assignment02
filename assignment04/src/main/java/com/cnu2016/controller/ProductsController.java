@@ -74,7 +74,7 @@ public class ProductsController {
             p.setCode(map.get("code"));
             p.setDescription(map.get("description"));
             ProductSerializer productSerializer1 = repository.save(p);
-            return ResponseEntity.status(HttpStatus.CREATED).body(productSerializer1);
+            return ResponseEntity.status(HttpStatus.OK).body(productSerializer1);
         }
     }
 
@@ -97,7 +97,7 @@ public class ProductsController {
             p.setDescription(description);
         }
         ProductSerializer productSerializer1 = repository.save(p);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productSerializer1);
+        return ResponseEntity.status(HttpStatus.OK).body(productSerializer1);
 
     }
 
