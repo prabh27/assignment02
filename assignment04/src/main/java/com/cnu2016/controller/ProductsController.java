@@ -112,7 +112,7 @@ public class ProductsController {
         } else {
             p.setIs_available(true);
             ProductSerializer productSerializer1 = repository.save(p);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            return ResponseEntity.status(HttpStatus.OK).body("");
         }
     }
 }
