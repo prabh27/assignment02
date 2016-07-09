@@ -24,17 +24,17 @@ public class ProductSerializer {
     private Double buy_price;
     private Double sell_price;
     private Double quantity;
-    private Boolean is_available = true;
+    private Integer is_available = 1;
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setIs_available(Boolean is_available) {
+    public void setIs_available(Integer is_available) {
         this.is_available = is_available;
     }
 
-    public Boolean getIs_available() {
+    public Integer getIs_available() {
 
         return is_available;
     }
