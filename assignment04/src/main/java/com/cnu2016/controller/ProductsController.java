@@ -32,7 +32,7 @@ public class ProductsController {
     public ResponseEntity getOne(@PathVariable int id) {
         try {
             ProductSerializer p = repository.findOne(id);
-            if (p == null) {
+            if (p == null || p.getIsAvailable() == false) {
                 Map<String, String> detailObject = new HashMap<String, String>();
                 detailObject.put("detail", "Not found.");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
@@ -112,7 +112,7 @@ public class ProductsController {
         } else {
             p.setIs_available(true);
             ProductSerializer productSerializer1 = repository.save(p);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ProductSerializer());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         }
     }
 }
