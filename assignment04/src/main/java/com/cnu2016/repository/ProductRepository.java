@@ -1,8 +1,8 @@
 package com.cnu2016.repository;
 
-import com.cnu2016.model.ProductSerializer;
+import com.cnu2016.model.Product;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ProductRepository extends CrudRepository<ProductSerializer, Integer> {
+public interface ProductRepository extends CrudRepository<Product, Integer> {
 
 }

@@ -1,5 +1,5 @@
 package com.cnu2016.controller;
-import com.cnu2016.model.ProductSerializer;
+import com.cnu2016.model.Product;
 import com.cnu2016.repository.ProductRepository;
 import java.util.*;
 import org.springframework.http.HttpStatus;
@@ -28,89 +28,89 @@ public class ProductsController {
         return ResponseEntity.status(HttpStatus.OK).body(p);
     }
 
-   @RequestMapping(value="/api/products/{id}", method=RequestMethod.GET)
+    @RequestMapping(value="/api/products/{id}", method=RequestMethod.GET)
     public ResponseEntity getOne(@PathVariable Integer id) {
-            ProductSerializer p = repository.findOne(id);
-            System.out.println(p);
-            if (p == null) {
-                Map<String, String> detailObject = new HashMap<String, String>();
-                detailObject.put("detail", "Not found.");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
-            }
-       if(p.getIs_available() == 0)
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-       return ResponseEntity.status(HttpStatus.OK).body(p);
+        Product p = repository.findOne(id);
+        System.out.println(p);
+        if (p == null) {
+            Map<String, String> detailObject = new HashMap<String, String>();
+            detailObject.put("detail", "Not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
+        }
+        if(p.getIsAvailable() == 0)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        return ResponseEntity.status(HttpStatus.OK).body(p);
 
     }
 
     @RequestMapping(value="/api/products", method=RequestMethod.POST)
-    public ResponseEntity postProduct(@RequestBody @Valid ProductSerializer productSerializer) {
-        String code = productSerializer.getCode();
+    public ResponseEntity postProduct(@RequestBody @Valid Product product) {
+        String code = product.getProductCode();
         if(code == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Code field empty");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         }
-        ProductSerializer p = repository.save(productSerializer);
+        Product p = repository.save(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(p);
 
     }
 
     @RequestMapping(value="/api/products/{pk}", method=RequestMethod.PUT)
     public ResponseEntity putProduct(@PathVariable Integer pk, @RequestBody Map<String, String> map) {
-        ProductSerializer p = repository.findOne(pk);
+        Product p = repository.findOne(pk);
         if(p == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         }
-        if(p.getIs_available() != 1)
+        if(p.getIsAvailable() != 1)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         if(map.get("code") == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Code field empty");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
-            p.setCode(map.get("code"));
-            p.setDescription(map.get("description"));
-            ProductSerializer productSerializer1 = repository.save(p);
-            return ResponseEntity.status(HttpStatus.OK).body(productSerializer1);
+            p.setProductCode(map.get("code"));
+            p.setProductDescription(map.get("description"));
+            Product product = repository.save(p);
+            return ResponseEntity.status(HttpStatus.OK).body(product);
         }
     }
 
     @RequestMapping(value="/api/products/{pk}", method=RequestMethod.PATCH)
-    public ResponseEntity patchProduct(@PathVariable Integer pk, @RequestBody ProductSerializer productSerializer) {
-        ProductSerializer p = repository.findOne(pk);
+    public ResponseEntity patchProduct(@PathVariable Integer pk, @RequestBody Product product) {
+        Product p = repository.findOne(pk);
         if(p == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         }
-        if(p.getIs_available() != 1)
+        if(p.getIsAvailable() != 1)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-        String code = productSerializer.getCode();
-        String description = productSerializer.getDescription();
+        String code = product.getProductCode();
+        String description = product.getProductDescription();
         if(code != null) {
-            p.setCode(code);
+            p.setProductCode(code);
         }
         if(description != null) {
-            p.setDescription(description);
+            p.setProductDescription(description);
         }
-        ProductSerializer productSerializer1 = repository.save(p);
-        return ResponseEntity.status(HttpStatus.OK).body(productSerializer1);
+        Product product1 = repository.save(p);
+        return ResponseEntity.status(HttpStatus.OK).body(product1);
 
     }
 
     @RequestMapping(value="/api/products/{pk}", method=RequestMethod.DELETE)
     public ResponseEntity deleteProduct(@PathVariable Integer pk) {
-        ProductSerializer p = repository.findOne(pk);
+        Product p = repository.findOne(pk);
         if(p == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
-            p.setIs_available(0);
-            ProductSerializer productSerializer1 = repository.save(p);
+            p.setIsAvailable(0);
+            Product product1 = repository.save(p);
             return ResponseEntity.status(HttpStatus.OK).body("");
         }
     }
