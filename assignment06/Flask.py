@@ -30,14 +30,15 @@ class AuditLog(db.Model):
         self.request_duration_ms = request_duration_ms
 
     def as_json(self):
+        ts = datetime.strptime((str(self.timestamp)), '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%YT%H:%M:%S')
+        print self.timestamp
         return {
-            "timestamp": self.timestamp,
+            "timestamp": ts,
             "url": self.url,
-            "id": self.id,
             "request_type": self.request_type,
             "parameters": self.parameters,
-            "request_duration_ms": self.request_duration_ms,
-            "response_code": self.response_code,
+            "request_duration_ms": int(self.request_duration_ms),
+            "response_code": int(self.response_code),
             "request_ip_address": self.request_ip_address
         }
 
@@ -45,18 +46,17 @@ class AuditLog(db.Model):
 @app.route('/api/auditLogs')
 def show_all():
         selectQuery = AuditLog.query
-        startTime = request.args.get('startTime')
-        endTime = request.args.get('endTime')
-        if startTime is not None:
-            startTime = startTime.split('T')
-            nowTime = startTime[0] + " " + startTime[1]
-            date_object1 = datetime.strptime(nowTime, '%Y-%m-%d %H:%M:%S')
-            endTime = endTime.split('T')
-            nowTime = endTime[0] + " " + endTime[1]
-            date_object2 = datetime.strptime(nowTime, '%Y-%m-%d %H:%M:%S')
-            print date_object1
-            print date_object2
-            selectQuery = selectQuery.filter(AuditLog.timestamp.between(date_object1, date_object2))
+        startTime = request.args.get('startTime','12/10/1970T00:00:00')
+        endTime = request.args.get('endTime','1/1/2030T00:00:00')
+        startTime = startTime.split('T')
+        nowTime = startTime[0] + " " + startTime[1]
+        date_object1 = datetime.strptime(nowTime, '%m/%d/%Y %H:%M:%S')
+        endTime = endTime.split('T')
+        nowTime = endTime[0] + " " + endTime[1]
+        date_object2 = datetime.strptime(nowTime, '%m/%d/%Y %H:%M:%S')
+        print date_object1
+        print date_object2
+        selectQuery = selectQuery.filter(AuditLog.timestamp.between(date_object1, date_object2))
         offset = request.args.get('offset')
         if offset is None:
             offset = 0
@@ -70,7 +70,7 @@ def show_all():
         if(int(limit) > 10):
             limit = 10
         return jsonify(
-            data=[a.as_json() for a in selectQuery.order_by(AuditLog.timestamp).limit(limit).offset(offset).all()])
+            data=[a.as_json() for a in selectQuery.order_by(AuditLog.timestamp.desc()).limit(limit).offset(offset).all()])
     # except:
     #      return jsonify(data = "error")
 
