@@ -84,7 +84,7 @@ public class OrdersController {
         Add a row in the Medium table
         Set status of Order = SHopping Cart
      */
-    @RequestMapping(value = "/api/orders/{pk}/orderlineitem", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/orders/{pk}/orderLineItem", method = RequestMethod.POST)
     public ResponseEntity getOrder(@RequestBody Map<String, String> inputs, @PathVariable Integer pk) {
         if(inputs.get("product_id") == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
