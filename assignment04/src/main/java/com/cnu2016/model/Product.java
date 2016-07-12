@@ -17,6 +17,7 @@ public class Product {
 
     @Column(name="product_code", columnDefinition = "varchar(255)")
     private String productCode;
+
     @Column(name="description", columnDefinition="TEXT")
     private String productDescription;
 

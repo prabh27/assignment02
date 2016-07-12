@@ -23,8 +23,16 @@ public class Orders {
     private String orderDate;
 
 
+    @Column(name="is_available")
+    private Integer isAvailable;
 
+    public Integer getIsAvailable() {
+        return isAvailable;
+    }
 
+    public void setIsAvailable(Integer isAvailable) {
+        this.isAvailable = isAvailable;
+    }
 
     @Column(name="status")
     private String status;
