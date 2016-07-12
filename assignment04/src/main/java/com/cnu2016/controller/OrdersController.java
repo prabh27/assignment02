@@ -55,7 +55,7 @@ public class OrdersController {
         return ResponseEntity.status(HttpStatus.OK).body("");
     }
 
-    @RequestMapping(value="/api/products/{id}", method=RequestMethod.GET)
+    @RequestMapping(value="/api/orders/{id}", method=RequestMethod.GET)
     public ResponseEntity getOne(@PathVariable Integer id) {
         Orders o = ordersRepository.findOne(id);
         if (o == null) {
@@ -102,11 +102,6 @@ public class OrdersController {
             Medium m = new Medium();
             m.setOrders(o);
             Product product = productRepository.findOne(productId);
-            if(quantity > product.getQuantity()) {
-                Map<String, String> detailObject = new HashMap<String, String>();
-                detailObject.put("detail", "Quantity not available");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
-            }
             m.setProducts(product);
             m.setPrice(product.getSellPrice());
             m.setQuantity(quantity);
@@ -159,6 +154,11 @@ public class OrdersController {
                 System.out.println(p);
                 double oldQuantity = p.getQuantity();
                 p.setQuantity(oldQuantity - medium.getQuantity());
+                if(p.getQuantity() < 0) {
+                    Map<String, String> detailObject = new HashMap<String, String>();
+                    detailObject.put("detail", "Not found.");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
+                }
                 productRepository.save(p);
 
             }
@@ -185,7 +185,7 @@ public class OrdersController {
         return ResponseEntity.status(HttpStatus.CREATED).body(f);
     }
 
-    @RequestMapping(value="/api/products/{pk}", method=RequestMethod.DELETE)
+    @RequestMapping(value="/api/orders/{pk}", method=RequestMethod.DELETE)
     public ResponseEntity deleteProduct(@PathVariable Integer pk) {
         Orders orders = ordersRepository.findOne(pk);
         if(orders == null) {
