@@ -20,11 +20,11 @@ public class Orders {
     private Integer orderId;
 
     @Column(name="order_date")
-    private String orderDate;
+    private String orderDate ;
 
 
     @Column(name="is_available")
-    private Integer isAvailable;
+    private Integer isAvailable = 1;
 
     public Integer getIsAvailable() {
         return isAvailable;

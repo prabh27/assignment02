@@ -86,22 +86,30 @@ public class OrdersController {
      */
     @RequestMapping(value = "/api/orders/{pk}", method = RequestMethod.POST)
     public ResponseEntity getOrder(@RequestBody Map<String, String> inputs, @PathVariable Integer pk) {
-        LOGGER.debug(inputs.get("quantity"));
-        LOGGER.debug(inputs.get("product_id"));
-
+        if(inputs.get("product_id") == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        if(inputs.get("quantity") == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         int productId = Integer.parseInt(inputs.get("product_id"));
         double quantity = Double.parseDouble(inputs.get("quantity"));
+        System.out.println(productId);
+        System.out.println(quantity);
         Orders o = ordersRepository.findOne(pk);
-        if(o != null && o.getIsAvailable() == 0)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+
+      //  if(o != null && o.getIsAvailable() == )
+        //    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         if(o == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
             Medium m = new Medium();
+            if(o.getIsAvailable() == 0)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
             m.setOrders(o);
             Product product = productRepository.findOne(productId);
+            if(product == null)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
             m.setProducts(product);
             m.setPrice(product.getSellPrice());
             m.setQuantity(quantity);
@@ -110,6 +118,7 @@ public class OrdersController {
             ordersRepository.save(o);
             return ResponseEntity.status(HttpStatus.CREATED).body(m);
         }
+
 
     }
 
@@ -130,8 +139,6 @@ public class OrdersController {
 
         String customerName = inputs.get("user_name");
         Customer customer = o.getCustomer();
-        if(o != null && o.getIsAvailable() == 0)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         if(o == null) {                   // Order not found.
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
@@ -143,11 +150,12 @@ public class OrdersController {
                 c.setAddressLine1(addressLine);
                 customersRepository.save(c);
             }
-            if(customer != null)         // if user logged in.
-            {
-                customer.setAddressLine1(addressLine);
-                customersRepository.save(customer);
-            }
+            if(customer == null)         // if user logged in.
+                customer = new Customer();
+
+            customer.setAddressLine1(addressLine);
+            customersRepository.save(customer);
+            o.setCustomer(customer);
             List<Medium> m = mediumRepository.findByOrders(o);  // edit all orders.
             for (Medium medium : m) {
                 Product p = medium.getProducts();
