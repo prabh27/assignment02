@@ -131,19 +131,19 @@ public class OrdersController {
     public ResponseEntity submitOrder(@RequestBody Map<String, String> inputs, @PathVariable int pk) {
         Orders o = ordersRepository.findOne(pk);
         String addressLine = inputs.get("address");
-        //if(addressLine == null) {                  // Check if address if given or not.
-          //  Map<String, String> detailObject = new HashMap<String, String>();
-        //    detailObject.put("address", "Not found.");
-         //   return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
-        //}
+        if(addressLine == null) {                  // Check if address if given or not.
+            Map<String, String> detailObject = new HashMap<String, String>();
+            detailObject.put("address", "Not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
+        }
 
         String customerName = inputs.get("user_name");
         Customer customer = o.getCustomer();
-       // if(o == null) {                   // Order not found.
-         //   Map<String, String> detailObject = new HashMap<String, String>();
-           // detailObject.put("detail", "Not found.");
-            //return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
-        //} else {
+        if(o == null) {                   // Order not found.
+            Map<String, String> detailObject = new HashMap<String, String>();
+            detailObject.put("detail", "Not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
+        } else {
             if(customerName != null && customer == null) {     // user_name given
                 Customer c = customersRepository.findUniqueByCustomerName(customerName);
                 o.setCustomer(c);
@@ -154,6 +154,7 @@ public class OrdersController {
                 customer = new Customer();
 
             customer.setAddressLine1(addressLine);
+            customer.setCustomerName(customerName);
             customersRepository.save(customer);
             o.setCustomer(customer);
             List<Medium> m = mediumRepository.findByOrders(o);  // edit all orders.
@@ -173,7 +174,7 @@ public class OrdersController {
             o.setStatus("Checkout");
             ordersRepository.save(o);
             return ResponseEntity.status(HttpStatus.CREATED).body(o);
-        //}
+        }
     }
 
 
