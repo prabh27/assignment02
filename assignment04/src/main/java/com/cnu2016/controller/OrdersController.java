@@ -129,6 +129,7 @@ public class OrdersController {
      */
     @RequestMapping(value = "/api/orders/{pk}", method = RequestMethod.PATCH)
     public ResponseEntity submitOrder(@RequestBody Map<String, String> inputs, @PathVariable int pk) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(""); 
         Orders o = ordersRepository.findOne(pk);
         String addressLine = inputs.get("address");
         if(addressLine == null) {                  // Check if address if given or not.
