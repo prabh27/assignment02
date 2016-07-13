@@ -13,7 +13,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="product_id")
-    private Integer productId;
+    private Integer id;
 
     @Column(name="product_code", columnDefinition = "varchar(255)")
     private String code;
@@ -37,8 +37,8 @@ public class Product {
     private Integer isAvailable = 1;
 
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
 
@@ -91,8 +91,8 @@ public class Product {
     }
 
 
-    public Integer getProductId() {
-        return productId;
+    public Integer getId() {
+        return id;
     }
 
     public String getCode() {
