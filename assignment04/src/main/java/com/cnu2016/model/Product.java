@@ -16,10 +16,10 @@ public class Product {
     private Integer productId;
 
     @Column(name="product_code", columnDefinition = "varchar(255)")
-    private String productCode;
+    private String code;
 
     @Column(name="description", columnDefinition="TEXT")
-    private String productDescription;
+    private String description;
 
     @Column(name="product_name")
     private String productName;
@@ -95,20 +95,20 @@ public class Product {
         return productId;
     }
 
-    public String getProductCode() {
-        return productCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getProductDescription() {
-        return productDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProductDescription(String productDescription) {
-        this.productDescription = productDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 

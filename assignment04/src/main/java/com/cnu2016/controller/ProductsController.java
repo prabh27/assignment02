@@ -1,7 +1,6 @@
 package com.cnu2016.controller;
 import com.cnu2016.model.Product;
 import com.cnu2016.repository.ProductRepository;
-import java.util.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -45,7 +43,7 @@ public class ProductsController {
 
     @RequestMapping(value="/api/products", method=RequestMethod.POST)
     public ResponseEntity postProduct(@RequestBody @Valid Product product) {
-        String code = product.getProductCode();
+        String code = product.getCode();
         if(code == null) {
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Code field empty");
@@ -71,8 +69,8 @@ public class ProductsController {
             detailObject.put("detail", "Code field empty");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
-            p.setProductCode(map.get("code"));
-            p.setProductDescription(map.get("description"));
+            p.setCode(map.get("code"));
+            p.setDescription(map.get("description"));
             Product product = repository.save(p);
             return ResponseEntity.status(HttpStatus.OK).body(product);
         }
@@ -88,13 +86,13 @@ public class ProductsController {
         }
         if(p.getIsAvailable() != 1)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-        String code = product.getProductCode();
-        String description = product.getProductDescription();
+        String code = product.getCode();
+        String description = product.getDescription();
         if(code != null) {
-            p.setProductCode(code);
+            p.setCode(code);
         }
         if(description != null) {
-            p.setProductDescription(description);
+            p.setDescription(description);
         }
         Product product1 = repository.save(p);
         return ResponseEntity.status(HttpStatus.OK).body(product1);
