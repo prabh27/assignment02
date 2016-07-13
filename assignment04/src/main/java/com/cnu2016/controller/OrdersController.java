@@ -134,11 +134,11 @@ public class OrdersController {
             if(o.getIsAvailable() == 0)
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
             String addressLine = inputs.get("address");
-//            if(addressLine == null) {                  // Check if address if given or not.
-//                Map<String, String> detailObject = new HashMap<String, String>();
-//                detailObject.put("address", "Not found.");
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
-//            }
+            if(addressLine == null) {                  // Check if address if given or not.
+                Map<String, String> detailObject = new HashMap<String, String>();
+                detailObject.put("address", "Not found.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
+            }
 
             String customerName = inputs.get("user_name");
             if(customerName != null) {     // user_name given
@@ -155,7 +155,7 @@ public class OrdersController {
                     c.setAddressLine1(addressLine);
                     customersRepository.save(c);
                 }
-            } 
+            }
             List<Medium> m = mediumRepository.findByOrders(o);  // edit all orders.
             int flag = 0;                       // for reverting back the quantities that are changed, if order cancelled
             for (Medium medium : m) {
@@ -210,6 +210,8 @@ public class OrdersController {
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
+            if(orders.getIsAvailable() == 0)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
             orders.setIsAvailable(0);
             Orders orders1 = ordersRepository.save(orders);
             return ResponseEntity.status(HttpStatus.OK).body("");
