@@ -107,6 +107,8 @@ public class ProductsController {
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
+            if(p.getIsAvailable() != 1)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
             p.setIsAvailable(0);
             Product product1 = repository.save(p);
             return ResponseEntity.status(HttpStatus.OK).body("");
