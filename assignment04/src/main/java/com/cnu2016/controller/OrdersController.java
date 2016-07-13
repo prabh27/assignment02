@@ -127,14 +127,8 @@ public class OrdersController {
     @RequestMapping(value = "/api/orders/{pk}", method = RequestMethod.PATCH)
     public ResponseEntity submitOrder(@RequestBody Map<String, String> inputs, @PathVariable int pk) {
         Orders o = ordersRepository.findOne(pk);
-        String addressLine = inputs.get("address");
-        if(addressLine == null) {                  // Check if address if given or not.
-            Map<String, String> detailObject = new HashMap<String, String>();
-            detailObject.put("address", "Not found.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
-        }
 
-        String customerName = inputs.get("user_name");
+
         if(o == null) {                   // Order not found.
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
@@ -142,6 +136,14 @@ public class OrdersController {
         } else {
             if(o.getIsAvailable() == 0)
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            String addressLine = inputs.get("address");
+            if(addressLine == null) {                  // Check if address if given or not.
+                Map<String, String> detailObject = new HashMap<String, String>();
+                detailObject.put("address", "Not found.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
+            }
+
+            String customerName = inputs.get("user_name");
             if(customerName != null) {     // user_name given
                 System.out.println(customerName);
                 Customer c = customersRepository.findUniqueByCustomerName(customerName);
