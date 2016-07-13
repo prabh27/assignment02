@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Order;
@@ -127,6 +128,7 @@ public class OrdersController {
         Change status to "Shipping"
         Reduce inventory
      */
+    @Transactional
     @RequestMapping(value = "/api/orders/{pk}", method = RequestMethod.PATCH)
     public ResponseEntity submitOrder(@RequestBody Map<String, String> inputs, @PathVariable int pk) {
         Orders o = ordersRepository.findOne(pk);
