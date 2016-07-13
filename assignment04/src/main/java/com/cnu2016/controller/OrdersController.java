@@ -140,36 +140,46 @@ public class OrdersController {
         }
 
         String customerName = inputs.get("user_name");
-        Customer customer = o.getCustomer();
         if(o == null) {                   // Order not found.
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
-            if(customerName != null && customer == null) {     // user_name given
+            if(customerName != null) {     // user_name given
+                System.out.println(customerName);
                 Customer c = customersRepository.findUniqueByCustomerName(customerName);
                 o.setCustomer(c);
                 c.setAddressLine1(addressLine);
                 customersRepository.save(c);
+            } else {
+               // if (customer == null)         // if user logged in.
+                Customer customer = new Customer();
+                System.out.println("AAAYa");
+                customer.setAddressLine1(addressLine);
+                customer.setCustomerName(customerName);
+                o.setCustomer(customer);
+                customersRepository.save(customer);
             }
-            if(customer == null)         // if user logged in.
-                customer = new Customer();
-
-            customer.setAddressLine1(addressLine);
-            customer.setCustomerName(customerName);
-            customersRepository.save(customer);
-            o.setCustomer(customer);
             List<Medium> m = mediumRepository.findByOrders(o);  // edit all orders.
+            int flag = 0;
+            for (Medium medium : m) {
+                Product p = medium.getProducts();
+                System.out.println(p);
+                double oldQuantity = p.getQuantity();
+                if(oldQuantity - medium.getQuantity() < 0) {
+                    flag = 1;
+                }
+                if(flag == 1) {
+                    Map<String, String> detailObject = new HashMap<String, String>();
+                    detailObject.put("detail", "Not found.");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
+                }
+            }
             for (Medium medium : m) {
                 Product p = medium.getProducts();
                 System.out.println(p);
                 double oldQuantity = p.getQuantity();
                 p.setQuantity(oldQuantity - medium.getQuantity());
-                if(p.getQuantity() < 0) {
-                    Map<String, String> detailObject = new HashMap<String, String>();
-                    detailObject.put("detail", "Not found.");
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
-                }
                 productRepository.save(p);
 
             }
