@@ -61,7 +61,7 @@ public class OrdersController {
         }
         if(o.getIsAvailable() == 0)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-        return ResponseEntity.status(HttpStatus.OK).body("");
+        return ResponseEntity.status(HttpStatus.OK).body(o);
 
     }
 
