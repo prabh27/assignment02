@@ -10,6 +10,6 @@ import java.util.List;
 
 
 public interface OrdersRepository extends CrudRepository<Orders, Integer>{
-    public List<Medium> findByOrderId(Integer id);
+    public List<Medium> findById(Integer id);
 }
 
