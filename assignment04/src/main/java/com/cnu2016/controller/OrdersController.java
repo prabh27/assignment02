@@ -136,7 +136,7 @@ public class OrdersController {
         if(addressLine == null) {                  // Check if address if given or not.
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("address", "Not found.");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(detailObject);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
         }
 
         String customerName = inputs.get("user_name");
@@ -152,21 +152,19 @@ public class OrdersController {
                 c.setAddressLine1(addressLine);
                 customersRepository.save(c);
             } else {
-               // if (customer == null)         // if user logged in.
                 Customer customer = new Customer();
-                System.out.println("AAAYa");
                 customer.setAddressLine1(addressLine);
                 customer.setCustomerName(customerName);
                 o.setCustomer(customer);
                 customersRepository.save(customer);
             }
             List<Medium> m = mediumRepository.findByOrders(o);  // edit all orders.
-            int flag = 0;
+            int flag = 0;                       // for reverting back the quantities that are changed, if order cancelled
             for (Medium medium : m) {
                 Product p = medium.getProducts();
                 System.out.println(p);
                 double oldQuantity = p.getQuantity();
-                if(oldQuantity - medium.getQuantity() < 0) {
+                if(oldQuantity - medium.getQuantity() < 0) {    // check if bad request -> Quantity > available.
                     flag = 1;
                 }
                 if(flag == 1) {
@@ -185,7 +183,7 @@ public class OrdersController {
             }
             o.setStatus("Checkout");
             ordersRepository.save(o);
-            return ResponseEntity.status(HttpStatus.CREATED).body(o);
+            return ResponseEntity.status(HttpStatus.OK).body(o);
         }
     }
 
