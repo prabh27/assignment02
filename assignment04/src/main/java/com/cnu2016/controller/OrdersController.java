@@ -143,17 +143,19 @@ public class OrdersController {
             String customerName = inputs.get("user_name");
             if(customerName != null) {     // user_name given
                 System.out.println(customerName);
-                Customer c = customersRepository.findUniqueByCustomerName(customerName);
-                o.setCustomer(c);
-                c.setAddressLine1(addressLine);
-                customersRepository.save(c);
-            } else {
-                Customer customer = new Customer();
-                customer.setAddressLine1(addressLine);
-                customer.setCustomerName(customerName);
-                o.setCustomer(customer);
-                customersRepository.save(customer);
-            }
+                Customer c = customersRepository.findByCustomerName(customerName);
+                if(c == null) {
+                    Customer customer = new Customer();
+                    customer.setAddressLine1(addressLine);
+                    customer.setCustomerName(customerName);
+                    o.setCustomer(customer);
+                    customersRepository.save(customer);
+                } else {
+                    o.setCustomer(c);
+                    c.setAddressLine1(addressLine);
+                    customersRepository.save(c);
+                }
+            } 
             List<Medium> m = mediumRepository.findByOrders(o);  // edit all orders.
             int flag = 0;                       // for reverting back the quantities that are changed, if order cancelled
             for (Medium medium : m) {

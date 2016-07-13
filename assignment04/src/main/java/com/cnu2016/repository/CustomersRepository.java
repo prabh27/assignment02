@@ -8,5 +8,5 @@ import org.springframework.data.repository.query.Param;
  * Created by prabh on 09/07/16.
  */
 public interface CustomersRepository extends CrudRepository<Customer, Integer>{
-    Customer findUniqueByCustomerName(@Param("user_name") String customerName);
+    Customer findByCustomerName(String customerName);
 }
