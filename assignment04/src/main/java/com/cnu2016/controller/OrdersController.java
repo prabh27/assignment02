@@ -86,13 +86,13 @@ public class OrdersController {
         Set status of Order = SHopping Cart
      */
     @RequestMapping(value = "/api/orders/{pk}/orderLineItem", method = RequestMethod.POST)
-    public ResponseEntity getOrder(@RequestBody Map<String, String> inputs, @PathVariable Integer pk) {
+    public ResponseEntity getOrder(@RequestBody Map<String, Integer> inputs, @PathVariable Integer pk) {
         if(inputs.get("product_id") == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
         if(inputs.get("qty") == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
-        int productId = Integer.parseInt(inputs.get("product_id"));
-        double quantity = Double.parseDouble(inputs.get("qty"));
+        int productId = inputs.get("product_id");
+        double quantity = inputs.get("qty");
         System.out.println(productId);
         System.out.println(quantity);
         Orders o = ordersRepository.findOne(pk);
