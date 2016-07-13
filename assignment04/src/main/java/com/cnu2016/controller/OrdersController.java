@@ -86,12 +86,9 @@ public class OrdersController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
         if(inputs.get("qty") == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
-        if(inputs.get("qty") < 0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
-        int productId = inputs.get("product_id");
-        double quantity = inputs.get("qty");
-        System.out.println(productId);
-        System.out.println(quantity);
+        Integer productId = inputs.get("product_id");
+        double quantity1 = inputs.get("qty");
+        Double quantity = quantity1;
         Orders o = ordersRepository.findOne(pk);
 
       //  if(o != null && o.getIsAvailable() == )
@@ -162,7 +159,7 @@ public class OrdersController {
             for (Medium medium : m) {
                 Product p = medium.getProducts();
                 System.out.println(p);
-                double oldQuantity = p.getQty();
+                Double oldQuantity = p.getQty();
                 if(oldQuantity - medium.getQuantity() < 0) {    // check if bad request -> Quantity > available.
                     flag = 1;
                 }
@@ -175,7 +172,7 @@ public class OrdersController {
             for (Medium medium : m) {
                 Product p = medium.getProducts();
                 System.out.println(p);
-                double oldQuantity = p.getQty();
+                Double oldQuantity = p.getQty();
                 p.setQty(oldQuantity - medium.getQuantity());
                 productRepository.save(p);
 
