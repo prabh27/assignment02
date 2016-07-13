@@ -17,7 +17,7 @@ public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="order_id")
-    private Integer orderId;
+    private Integer id;
 
     @Column(name="order_date")
     private String orderDate ;
@@ -37,8 +37,8 @@ public class Orders {
     @Column(name="status")
     private String status;
 
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setOrderDate(String orderDate) {
@@ -51,9 +51,9 @@ public class Orders {
         this.status = status;
     }
 
-    public Integer getOrderId() {
+    public Integer getId() {
 
-        return orderId;
+        return id;
     }
 
     public String getOrderDate() {
