@@ -30,7 +30,7 @@ public class Product {
     @Column(name="sell_price")
     private Double sellPrice;
 
-    @Column(name="qty")
+    @Column(name="quantity")
     private Double qty;
 
     @Column(name="is_available")
