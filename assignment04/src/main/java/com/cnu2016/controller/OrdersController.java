@@ -2,19 +2,14 @@ package com.cnu2016.controller;
 
 import com.cnu2016.model.*;
 import com.cnu2016.repository.*;
-import org.aspectj.weaver.ast.Or;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.Order;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,7 +158,7 @@ public class OrdersController {
             for (Medium medium : m) {
                 Product p = medium.getProducts();
                 System.out.println(p);
-                double oldQuantity = p.getQuantity();
+                double oldQuantity = p.getQty();
                 if(oldQuantity - medium.getQuantity() < 0) {    // check if bad request -> Quantity > available.
                     flag = 1;
                 }
@@ -176,8 +171,8 @@ public class OrdersController {
             for (Medium medium : m) {
                 Product p = medium.getProducts();
                 System.out.println(p);
-                double oldQuantity = p.getQuantity();
-                p.setQuantity(oldQuantity - medium.getQuantity());
+                double oldQuantity = p.getQty();
+                p.setQty(oldQuantity - medium.getQuantity());
                 productRepository.save(p);
 
             }

@@ -30,8 +30,8 @@ public class Product {
     @Column(name="sell_price")
     private Double sellPrice;
 
-    @Column(name="quantity")
-    private Double quantity;
+    @Column(name="qty")
+    private Double qty;
 
     @Column(name="is_available")
     private Integer isAvailable = 1;
@@ -66,8 +66,8 @@ public class Product {
         this.sellPrice = sellPrice;
     }
 
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
+    public void setQty(Double qty) {
+        this.qty = qty;
     }
 
     public String getProductName() {
@@ -82,8 +82,8 @@ public class Product {
         return sellPrice;
     }
 
-    public Double getQuantity() {
-        return quantity;
+    public Double getQty() {
+        return qty;
     }
 
     public Product() {
