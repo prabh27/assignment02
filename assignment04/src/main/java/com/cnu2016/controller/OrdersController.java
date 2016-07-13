@@ -86,6 +86,8 @@ public class OrdersController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
         if(inputs.get("qty") == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+        if(inputs.get("qty") < 0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
         int productId = inputs.get("product_id");
         double quantity = inputs.get("qty");
         System.out.println(productId);
@@ -127,8 +129,6 @@ public class OrdersController {
     @RequestMapping(value = "/api/orders/{pk}", method = RequestMethod.PATCH)
     public ResponseEntity submitOrder(@RequestBody Map<String, String> inputs, @PathVariable int pk) {
         Orders o = ordersRepository.findOne(pk);
-
-
         if(o == null) {                   // Order not found.
             Map<String, String> detailObject = new HashMap<String, String>();
             detailObject.put("detail", "Not found.");
@@ -137,11 +137,11 @@ public class OrdersController {
             if(o.getIsAvailable() == 0)
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
             String addressLine = inputs.get("address");
-            if(addressLine == null) {                  // Check if address if given or not.
-                Map<String, String> detailObject = new HashMap<String, String>();
-                detailObject.put("address", "Not found.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
-            }
+//            if(addressLine == null) {                  // Check if address if given or not.
+//                Map<String, String> detailObject = new HashMap<String, String>();
+//                detailObject.put("address", "Not found.");
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
+//            }
 
             String customerName = inputs.get("user_name");
             if(customerName != null) {     // user_name given
