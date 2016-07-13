@@ -140,6 +140,8 @@ public class OrdersController {
             detailObject.put("detail", "Not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
         } else {
+            if(o.getIsAvailable() == 0)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
             if(customerName != null) {     // user_name given
                 System.out.println(customerName);
                 Customer c = customersRepository.findUniqueByCustomerName(customerName);
