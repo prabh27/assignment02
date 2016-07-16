@@ -1,0 +1,211 @@
+package com.cnu2016.controller;
+
+import com.cnu2016.model.*;
+import com.cnu2016.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by prabh on 09/07/16.
+ */
+
+@RestController
+public class OrdersController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrdersController.class.getName());
+    @Autowired
+    private OrdersRepository ordersRepository;
+
+    @Autowired
+    private MediumRepository mediumRepository;
+
+    @Autowired
+    private CustomersRepository customersRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private FeedbackRepository feedbackRepository;
+
+
+    @RequestMapping(value = "/api/health", method = RequestMethod.GET)
+    public ResponseEntity health() {
+        return ResponseEntity.status(HttpStatus.OK).body("");
+    }
+
+    @RequestMapping(value = "/api/orders/{id}", method = RequestMethod.GET)
+    public ResponseEntity getOne(@PathVariable Integer id) {
+        Orders o = ordersRepository.findOne(id);
+        if (o == null) {
+            Map<String, String> detailObject = new HashMap<String, String>();
+            detailObject.put("detail", "Not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
+        }
+        if (o.getIsAvailable() == 0)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        return ResponseEntity.status(HttpStatus.OK).body(o);
+
+    }
+
+    /*
+    Create an order
+     */
+    @RequestMapping(value = "/api/orders", method = RequestMethod.POST)
+    public ResponseEntity postOrder() {
+        Orders orders = new Orders();
+        ordersRepository.save(orders);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orders);
+
+    }
+
+
+    /* List an Item in an order
+        Find the order
+            if not found 404 Not Found
+        if product quantity is greater than available, exception.
+        Add a row in the Medium table
+        Set status of Order = SHopping Cart
+     */
+    @RequestMapping(value = "/api/orders/{pk}/orderLineItem", method = RequestMethod.POST)
+    public ResponseEntity getOrder(@RequestBody Map<String, Integer> inputs, @PathVariable Integer pk) {
+        if (inputs.get("product_id") == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+        if (inputs.get("qty") == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+        Integer productId = inputs.get("product_id");
+        double quantity1 = inputs.get("qty");
+        Double quantity = quantity1;
+        Orders o = ordersRepository.findOne(pk);
+        if (o == null) {
+            Map<String, String> detailObject = new HashMap<String, String>();
+            detailObject.put("detail", "Not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
+        } else {
+            Medium m = new Medium();
+            if (o.getIsAvailable() == 0)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            m.setOrders(o);
+            Product product = productRepository.findOne(productId);
+            if (product == null)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            m.setProducts(product);
+            m.setPrice(product.getSellPrice());
+            m.setQuantity(quantity);
+            mediumRepository.save(m);
+            o.setStatus("Shopping Cart");
+            ordersRepository.save(o);
+            return ResponseEntity.status(HttpStatus.CREATED).body(m);
+        }
+
+
+    }
+
+    /* Submit an Order
+        if order not found -> 404
+        Change status to "Shipping"
+        Reduce inventory
+     */
+    @Transactional
+    @RequestMapping(value = "/api/orders/{pk}", method = RequestMethod.PATCH)
+    public ResponseEntity submitOrder(@RequestBody Map<String, String> inputs, @PathVariable int pk) {
+        Orders o = ordersRepository.findOne(pk);
+        if (o == null) {                   // Order not found.
+            Map<String, String> detailObject = new HashMap<String, String>();
+            detailObject.put("detail", "Not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
+        } else {
+            if (o.getIsAvailable() == 0)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            String addressLine = inputs.get("address");
+            if (addressLine == null) {                  // Check if address if given or not.
+                Map<String, String> detailObject = new HashMap<String, String>();
+                detailObject.put("address", "Not found.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
+            }
+
+            String customerName = inputs.get("user_name");
+            if (customerName != null) {     // user_name given
+                Customer c = customersRepository.findByCustomerName(customerName);
+                if (c == null) {
+                    Customer customer = new Customer();
+                    customer.setAddressLine1(addressLine);
+                    customer.setCustomerName(customerName);
+                    o.setCustomer(customer);
+                    customersRepository.save(customer);
+                } else {
+                    o.setCustomer(c);
+                    c.setAddressLine1(addressLine);
+                    customersRepository.save(c);
+                }
+            }
+            List<Medium> m = mediumRepository.findByOrders(o);  // edit all orders.
+            int flag = 0;                       // for reverting back the quantities that are changed, if order cancelled
+            for (Medium medium : m) {
+                Product p = medium.getProducts();
+                Double oldQuantity = p.getQty();
+                if (oldQuantity - medium.getQuantity() < 0) {    // check if bad request -> Quantity > available.
+                    flag = 1;
+                }
+                if (flag == 1) {
+                    Map<String, String> detailObject = new HashMap<String, String>();
+                    detailObject.put("detail", "Not found.");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(detailObject);
+                }
+            }
+            for (Medium medium : m) {
+                Product p = medium.getProducts();
+                Double oldQuantity = p.getQty();
+                p.setQty(oldQuantity - medium.getQuantity());
+                productRepository.save(p);
+
+            }
+            o.setStatus("Checkout");
+            ordersRepository.save(o);
+            return ResponseEntity.status(HttpStatus.OK).body(o);
+        }
+    }
+
+
+    /*
+    Contact Us -> Add fields email id, description.
+     */
+    @RequestMapping(value = "/api/ContactUs", method = RequestMethod.POST)
+    public ResponseEntity postContactUs(@RequestBody Map<String, String> map) {
+        Feedback feedback = new Feedback();
+        if (map.get("customer_id") != null) {
+            Customer customer = customersRepository.findOne(Integer.parseInt(map.get("customer_id")));
+            feedback.setCustomer(customer);
+        }
+        feedback.setDescription(map.get("description"));
+        feedback.setEmailAddress(map.get("email_address"));
+        feedbackRepository.save(feedback);
+        return ResponseEntity.status(HttpStatus.CREATED).body(feedback);
+    }
+
+    @RequestMapping(value = "/api/orders/{pk}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteProduct(@PathVariable Integer pk) {
+        Orders orders = ordersRepository.findOne(pk);
+        if (orders == null) {
+            Map<String, String> detailObject = new HashMap<String, String>();
+            detailObject.put("detail", "Not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailObject);
+        } else {
+            if (orders.getIsAvailable() == 0)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            orders.setIsAvailable(0);
+            Orders orders1 = ordersRepository.save(orders);
+            return ResponseEntity.status(HttpStatus.OK).body("");
+        }
+    }
+
+}
