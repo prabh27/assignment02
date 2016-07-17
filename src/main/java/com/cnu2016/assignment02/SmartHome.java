@@ -1,75 +1,65 @@
 package com.cnu2016.assignment02;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.ArrayList;
 
 
 
+
 public class SmartHome {
-    static int testAC = 0;
-    
-    ArrayList<Appliance> list = new ArrayList<Appliance>();
+    List list = new ArrayList<Appliance>();
+
     public static void main(String... args) {
-        SmartHome s = new SmartHome();
         
-        AirConditioner airConditioner = new AirConditioner();
-        WaterHeater waterHeater = new WaterHeater();
-        CookingOven cookingOven = new CookingOven();
-        s.list.add(airConditioner);
-        s.list.add(waterHeater);
-        s.list.add(cookingOven);
-        airConditioner.ScheduleEvent(airConditioner, s ,10);
-    }
-			    
+
+    }   
 
 }
-
 class Appliance {
-    public boolean state = false;
+    static enum State {
+        ON,
+        OFF;
+    }
+    static enum  Type {
+        AirConditioner,
+        CookingOven,
+        WaterHeater;
+    }
 
-    public void ScheduleEvent(Appliance modifiedAppliance, SmartHome s, long delayTime) {
-        TimerTask tasknew = new MyTimerTask(modifiedAppliance,s);
+    State state;
+    Type type;
+    public Appliance(Type type, State state){
+        this.state = state;
+        this.type = type;
+    }
+
+    public Appliance() {
+
+    }
+
+    public void ScheduleEvent(Appliance modifiedAppliance, long delayTime, State currentState) {
+        TimerTask tasknew = new MyTimerTask(modifiedAppliance, currentState);
         Timer timer = new Timer();
         timer.schedule(tasknew, delayTime); 
-        return;
     }
     
 }
-
 class MyTimerTask extends TimerTask {
     Appliance appliance = new Appliance();
-        SmartHome s = new SmartHome();
-    public MyTimerTask(Appliance modifiedAppliance, SmartHome s) {
+    private Appliance.State currentState;
+    private Appliance.State previousState;
+    public MyTimerTask(Appliance modifiedAppliance, Appliance.State currentState) {
         this.appliance = modifiedAppliance;
-        this.s = s;
-
+        this.currentState = currentState;
+        this.previousState = modifiedAppliance.state;
     }
     
     public void run() {
-        appliance.state = true;
-        if(appliance.state == true)
-        {
-            s.list.get(0).state = true;
-        }
-        return;
-    }
-}
-
-class AirConditioner extends Appliance {
-    public AirConditioner() {
-        super();
-    }
-}
-
-class CookingOven extends Appliance {
-    public CookingOven() {
-        super();
-    }
-}
-
-class WaterHeater extends Appliance {
-    public WaterHeater() {
-        super();
+        if(this.currentState == Appliance.State.OFF)
+            appliance.state = Appliance.State.ON;
+        else
+            appliance.state = Appliance.State.OFF;
     }
 }
