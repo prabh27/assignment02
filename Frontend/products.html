@@ -1,0 +1,29 @@
+<div class="container" >
+    <div class="row">
+        <div class="col-md-3">
+            <p class="lead">Shop Name</p>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation">Categories</li>
+            <div class="list-group" ng-controller="CategoryController as category">
+                <div ng-repeat="category in categories">
+                <li role="presentation"> <a href="#"> {{category.name}}</a> </li>
+            </div>
+                </div>
+                </ul>
+        </div>
+        <div ng-controller="StoreController as store">
+            <div class="col-md-3" ng-repeat="product in products">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <img src="http://buyersguide.caranddriver.com/media/assets/submodel/280_7568.jpg">
+                        <h3>Code: {{product.code}}</h3>
+                        <h4>Price: {{product.price}}</h4>
+                        <a href="#/{{product.id}}"
+                           class="btn btn-default"
+                           role="button">Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
