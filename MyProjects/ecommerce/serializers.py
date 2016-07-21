@@ -14,10 +14,11 @@ class ProductsSerializer(serializers.ModelSerializer):
     category = serializers.CharField(required=True, write_only=True)
 
     def create(self, validated_data):
-        product = Products.objects.create(product_code=validated_data['product_code'],
-                                          description=validated_data['description'],
-                                          buy_price=validated_data['buy_price'],
-                                          quantity=500)
+        product = Products.objects.get_or_create(product_code=validated_data['product_code'])[0];
+        product.description = validated_data['description']
+        product.buy_price = validated_data['buy_price']
+        product.quantity = 500
+        product.save()
         category = Category.objects.get_or_create(name=validated_data['category'])
         bridge = Bridge.objects.create(product=product,
                                        category=Category.objects.get_or_create(name=validated_data['category'])[0])
