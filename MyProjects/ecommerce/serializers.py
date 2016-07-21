@@ -102,7 +102,6 @@ class OrdersSerializer(serializers.ModelSerializer):
                     instance.status = validated_data['status']
                 if not self.partial:
                     instance.customer = None
-                    instance.customer.address_line1 = None
                 instance.save()
             else:
                 if validated_data.get('customer').get('customer_name'):
