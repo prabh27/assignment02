@@ -93,29 +93,3 @@ class OrdersSerializer(serializers.ModelSerializer):
                                          order_date=strftime("%Y-%m-%d", gmtime()),
                                          status=validated_data['status'])
 
-
-
-    def update(self, instance, validated_data):
-            #Put & Patch
-            if not validated_data.get('customer'):
-                if 'status' in validated_data:
-                    instance.status = validated_data['status']
-                if not self.partial:
-                    instance.customer = None
-                instance.save()
-            else:
-                if validated_data.get('customer').get('customer_name'):
-                    instance.customer = Customers.objects.get_or_create(customer_name=validated_data.get('customer')['customer_name'])[0]
-                    print instance.customer.address_line1
-                else:
-                    if(instance.customer == None):
-                        instance.customer = Customers.objects.create(customer_name="null")
-                if validated_data.get('customer').get('address_line1'):
-                    instance.customer.address_line1 = validated_data.get('customer').get('address_line1')
-                else:
-                    if not self.partial:
-                         instance.customer.address_line1 = None
-                instance.status = validated_data['status']
-                instance.customer.save()
-                instance.save()
-            return instance

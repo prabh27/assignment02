@@ -18,6 +18,7 @@ from rest_framework.decorators import detail_route, list_route
 from django.http import HttpResponse
 from django.http import Http404
 from django.core import serializers
+from models import Customers
 
 from rest_framework import viewsets
 from rest_framework import mixins
@@ -132,6 +133,31 @@ class OrdersViewSet(viewsets.ModelViewSet):
     queryset = Orders.objects.filter(Q(is_available=1))
     serializer_class = OrdersSerializer
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        requestData = request.data
+        if 'status' in requestData:
+            instance.status = requestData['status']
+        user = instance.customer
+        if 'username' in requestData:
+            username = requestData['username']
+            if len(Customers.objects.filter(customer_name=username)) != 0:
+                user = Customers.objects.get(customer_name=username)
+            else:
+                user = Customers()
+                user.customer_name = username
+
+        if 'address' in requestData:
+            user.address_line_1 = requestData['address']
+
+        Customers.save(user)
+
+        instance.user = user
+        Orders.save(instance)
+
+        serializer = OrdersSerializer(instance)
+        headers = self.get_success_headers(serializer.data)
+        return HttpResponse(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
 
 class OrderLineViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -141,9 +167,7 @@ class OrderLineViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixin
     def create(self, request, *args, **kwargs):
         orderLineSerializer = OrderLineSerializer(data=request.data)
         data = request.data
-        print data
         if orderLineSerializer.is_valid():
-            print "aaya"
             product = Products.objects.get(product_id=data['product_id'])
             order = Orders.objects.get(order_id=kwargs['order_id'])
             medium = Medium.objects.create(product=product, order=order, price=data['price'])
