@@ -51,6 +51,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'ecommerce.views.MiddleWare',
 ]
 
 ROOT_URLCONF = 'MyProjects.urls'
@@ -80,11 +81,9 @@ WSGI_APPLICATION = 'MyProjects.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': ,
-        'HOST': os.environ['host'],
-        'PORT': '3306',
-        'USER': os.environ['user'],
-        'PASSWORD': os.environ['password']
+        'OPTIONS': {
+            'read_default_file': os.path.join(BASE_DIR, 'dbsettings.ini'),
+        },
     }
 }
 
@@ -109,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+
     'PAGE_SIZE': 10
 }
 

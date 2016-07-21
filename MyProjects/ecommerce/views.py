@@ -42,6 +42,9 @@ def as_json(query):
 def index(request):
     return HttpResponse("Hello, world. You're at the Products index.")
 
+def health():
+    return HttpResponse(status=status.HTTP_200_OK);
+
 def getResults(request):
     start_date = request.GET.get('startDate')
     end_date = request.GET.get('endDate')
@@ -179,7 +182,13 @@ class OrderLineViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixin
             return HttpResponse(serializers.serialize('json', queryset=queryset))
 
 
+class MiddleWare(object):
+    def process_response(self, request, response):
+        if(response is not None):
+            if(response._container is not None and response._container is not ['']):
+                response._container = ['{"data":'+response._container[0]+'}']
 
+        return response
 
 
 
