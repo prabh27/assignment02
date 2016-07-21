@@ -93,26 +93,30 @@ class OrdersSerializer(serializers.ModelSerializer):
                                          order_date=strftime("%Y-%m-%d", gmtime()),
                                          status=validated_data['status'])
 
+
+
     def update(self, instance, validated_data):
-        if 'status' in validated_data:
-            instance.status = validated_data['status']
-        user = instance.customer
-        if 'username' in validated_data:
-            username = validated_data['username']
-            if len(Customers.objects.filter(customer_name=username)) != 0:
-                user = Customers.objects.get(customer_name=username)
+            #Put & Patch
+            if not validated_data.get('customer'):
+                if 'status' in validated_data:
+                    instance.status = validated_data['status']
+                if not self.partial:
+                    instance.customer = None
+                    instance.customer.address_line1 = None
+                instance.save()
             else:
-                user = Customers()
-                user.customer_name = username
-
-        if 'address' in validated_data:
-            user.address_line_1 = validated_data['address']
-
-        Customers.save(user)
-
-        instance.user = user
-        Orders.save(instance)
-        serializer = OrdersSerializer(instance)
-        return instance
-
-
+                if validated_data.get('customer').get('customer_name'):
+                    instance.customer = Customers.objects.get_or_create(customer_name=validated_data.get('customer')['customer_name'])[0]
+                    print instance.customer.address_line1
+                else:
+                    if(instance.customer == None):
+                        instance.customer = Customers.objects.create(customer_name="null")
+                if validated_data.get('customer').get('address_line1'):
+                    instance.customer.address_line1 = validated_data.get('customer').get('address_line1')
+                else:
+                    if not self.partial:
+                         instance.customer.address_line1 = None
+                instance.status = validated_data['status']
+                instance.customer.save()
+                instance.save()
+            return instance
