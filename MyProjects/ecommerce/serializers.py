@@ -107,7 +107,8 @@ class OrdersSerializer(serializers.ModelSerializer):
                     print "aaya"
                     instance.customer = Customers.objects.get_or_create(customer_name=validated_data.get('customer')['customer_name'])[0]
                 else:
-                    instance.customer = Customers.objects.create(customer_name="null")
+                    if(instance.customer == None):
+                        instance.customer = Customers.objects.create(customer_name="null")
                 if validated_data.get('customer').get('address_line1'):
                     print validated_data.get('customer').get('address_line1')
                     instance.customer.address_line1 = validated_data.get('customer').get('address_line1')
