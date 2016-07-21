@@ -83,7 +83,7 @@ class OrdersSerializer(serializers.ModelSerializer):
                                          status=validated_data['status'])
         else:
             if validated_data.get('customer').get('customer_name'):
-                customer = Customers.objects.get(customer_name=validated_data.get('customer')['customer_name'])
+                customer = Customers.objects.get_or_create(customer_name=validated_data.get('customer')['customer_name'])[0]
             else:
                 customer = Customers.objects.get(customer_name="null")
             if validated_data.get('customer').get('address_line1'):
