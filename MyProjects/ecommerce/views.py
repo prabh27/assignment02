@@ -42,7 +42,7 @@ def as_json(query):
 def index(request):
     return HttpResponse("Hello, world. You're at the Products index.")
 
-def my_health():
+def my_health(self):
     return HttpResponse(status=status.HTTP_200_OK);
 
 def getResults(request):
