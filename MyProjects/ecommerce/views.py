@@ -134,7 +134,6 @@ class OrdersViewSet(viewsets.ModelViewSet):
 
 
 
-
 class OrderLineViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Medium.objects.all()
     serializer_class = OrderLineSerializer
