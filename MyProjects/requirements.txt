@@ -1,0 +1,14 @@
+coreapi==1.32.0
+Django==1.9.7
+django-cors-headers==1.1.0
+django-filter==0.13.0
+django-rest-swagger==0.3.8
+djangorestframework==3.4.0
+itypes==1.1.0
+Markdown==2.6.6
+MySQL-python==1.2.5
+openapi-codec==1.0.0
+PyYAML==3.11
+requests==2.10.0
+simplejson==3.8.2
+uritemplate==0.6
