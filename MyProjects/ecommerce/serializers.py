@@ -82,7 +82,10 @@ class OrdersSerializer(serializers.ModelSerializer):
             return Orders.objects.create(order_date=strftime("%Y-%m-%d", gmtime()),
                                          status=validated_data['status'])
         else:
-            customer = Customers.objects.get_or_create(customer_name=validated_data.get('customer')['customer_name'])[0]
+            if validated_data.get('customer').get('customer_name'):
+                customer = Customers.objects.get(customer_name=validated_data.get('customer')['customer_name'])
+            else:
+                customer = Customers.objects.get(customer_name="null")
             if validated_data.get('customer').get('address_line1'):
                 customer.address_line1 = validated_data.get('customer').get('address_line1')
             customer.save()

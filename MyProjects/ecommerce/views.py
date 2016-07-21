@@ -126,28 +126,12 @@ class ProductsViewSet(viewsets.ModelViewSet):
     queryset = Products.objects.filter(Q(is_available=1))
     serializer_class = ProductsSerializer
 
-    # def destroy(self, request, *args, **kwargs):
-    #     try:
-    #         instance = self.get_object()
-    #         instance.is_available = 0
-    #         instance.save()
-    #     except Http404:
-    #         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    #     return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
 class OrdersViewSet(viewsets.ModelViewSet):
     queryset = Orders.objects.filter(Q(is_available=1))
     serializer_class = OrdersSerializer
 
-    # def destroy(self, request, *args, **kwargs):
-    #     try:
-    #         instance = self.get_object()
-    #         instance.is_available = 0
-    #         instance.save()
-    #     except Http404:
-    #         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    #     return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
 
