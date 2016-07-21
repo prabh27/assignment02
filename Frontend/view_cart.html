@@ -1,0 +1,42 @@
+</br></br></br>
+</br></br></br>
+
+
+<div class="container" ng-controller="ViewCartController" xmlns="http://www.w3.org/1999/html">
+
+    <div class="container">
+        <h2 align="center">Cart</h2></br></br>
+
+        <div class="container" class="col-md-12" style="border:none; background:white;"
+             ng-repeat="prod in range(0, products.length-1)">
+            <div class="col-md-4">
+                <img src={{image_url[products[prod].id%3]}} alt="thumb01">
+            </div>
+            <div class="col-md-6">
+
+                <h5> Code: {{products[prod].code}}</h5>
+                <h5> Price: {{products[prod].price}}</h5>
+                <h5>Description: {{products[prod].description}}</h5>
+                <h5> Quantity: {{details[prod].fields.quantity}}</h5>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="container" style="border:none; background:white;">
+        <div align="center">
+            <h4> Total Cost: {{cost}}</h4>
+            <b>
+                <button type="button"><a href="#/checkout"> Checkout</a></button>
+            </b>&nbsp;
+            <button type="button"><a href="#/" ng-click="emptyCart()">
+                Empty Cart
+            </a></button>
+        </div>
+    </div>
+</div>
+</div>
+
+
+</br></br></br>
+</br></br></br>

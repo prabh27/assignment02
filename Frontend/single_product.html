@@ -1,0 +1,19 @@
+</br></br></br>
+</br></br></br>
+</br></br></br>
+
+
+<div class="container" ng-controller="AddToCartController">
+    <div>
+        <div class="thumbnail">
+            <img src={{image_url[product.id%3]}} alt="thumb01">
+            <h3> Code: {{product.code}}</h3>
+            <h2> Price: {{product.price}}</h2>
+            <p> <b> Description: </b>{{product.description}}</p>
+            <input type='text' value="1" ng-model="qty"/>
+            <button type="button"
+                    ng-click="addProduct(product.id, qty, product.price)" >
+                Add to Cart</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+<!--</br></br></br>-->
+<!--</br></br></br>-->
+
+
+<!--<div class="container" ng-controller="ViewCartController">-->
+
+<!--<div class="container">-->
+<!--<h2 align="center">Cart</h2></br></br>-->
+
+<!--<div class="container" style="border:none; background:white;" ng-repeat="prod in range(0, products.length-1)">-->
+<!--<div class="col-sm-6 col-md-12   col-xs-6" >-->
+<!--<img src={{image_url[products[prod].id%3]}} alt="thumb01">-->
+<!--<div class="col-sm-6 col-md-6 col-xs-6" >-->
+<!--<h5> Code: {{products[prod].code}}</h5>-->
+<!--<h5>  Price: {{products[prod].price}}</h5>-->
+<!--<h5>Description: {{products[prod].description}}</h5>-->
+<!--<h5> Quantity: {{details[prod].fields.quantity}}</h5>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="col-sm-6 col-md-12 col-xs-6">-->
+<!--<h5> Order Id : {{order_id}}</h5>-->
+<!--<h5> Total items: {{items}}</h5>-->
+<!--<h5> Total Cost : {{cost}}</h5>-->
+
+<!--</div>-->
+
+<!--</br></br></br>-->
+
+<!--<b></b><p> Thank You, Have a nice day!!</p></b>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+
+<!--</br></br></br>-->
+<!--</br></br></br>-->
+
+
+</br></br></br>
+</br></br></br>
+
+
+<div class="container" ng-controller="ViewCartController">
+
+    <div class="container">
+        <h2 align="center">Order Summary</h2></br></br>
+
+        <div class="container" class="col-md-12" style="border:none; background:white;"
+             ng-repeat="prod in range(0, products.length-1)">
+            <div class="col-md-4">
+                <img src={{image_url[products[prod].id%3]}} alt="thumb01">
+            </div>
+            <div class="col-md-6">
+
+                <h5> Code: {{products[prod].code}}</h5>
+                <h5> Price: {{products[prod].price}}</h5>
+                <h5>Description: {{products[prod].description}}</h5>
+                <h5> Quantity: {{details[prod].fields.quantity}}</h5>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="container" style="border:none; background:white;">
+        <div align="center">
+            <h5> Order Id : {{order_id}}</h5>
+            <h5> Total items: {{items}}</h5>
+            <h5> Total Cost : {{cost}}</h5>
+            <b></b>
+            <p> Thank You, Have a nice day!!</p></b>
+
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+</br></br></br>
+</br></br></br>
