@@ -158,7 +158,9 @@ class OrderLineViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixin
     def create(self, request, *args, **kwargs):
         orderLineSerializer = OrderLineSerializer(data=request.data)
         data = request.data
+        print data
         if orderLineSerializer.is_valid():
+            print "aaya"
             product = Products.objects.get(product_id=data['product_id'])
             order = Orders.objects.get(order_id=kwargs['order_id'])
             medium = Medium.objects.create(product=product, order=order, price=data['price'])

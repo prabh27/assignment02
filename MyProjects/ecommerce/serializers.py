@@ -9,7 +9,7 @@ class ProductsSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='product_id', read_only=True)
     code = serializers.CharField(source='product_code', required=True)
     description = serializers.CharField(required=True)
-    price = serializers.CharField(source='buy_price', required=True)
+    price = serializers.FloatField(source='buy_price', required=True)
     category_id = serializers.CharField(read_only=True, source='get_category_id')
     category = serializers.CharField(required=True, write_only=True)
 
@@ -98,7 +98,8 @@ class OrdersSerializer(serializers.ModelSerializer):
                     instance.customer__address_line1 = None
                 instance.save()
             else:
-                instance.customer = Customers.objects.get_or_create(customer_name=validated_data.get('customer')['customer_name'])[0]
+                if validated_data.get('customer').get('customer_name'):
+                    instance.customer = Customers.objects.get_or_create(customer_name=validated_data.get('customer')['customer_name'])[0]
                 if validated_data.get('customer').get('address_line1'):
                     instance.customer__address_line1 = validated_data.get('customer').get('address_line1')
                 else:
