@@ -1,0 +1,103 @@
+
+<!--<div class="container">-->
+    <!--<div class="row" ng-controller="CategoryController as category">-->
+        <!--<div class="col-md-3">-->
+            <!--<p class="lead">Shop Name</p>-->
+            <!--<ul class="nav nav-pills nav-stacked">-->
+                <!--<li role="presentation">Categories</li>-->
+                <!--<div class="list-group">-->
+                    <!--<div ng-repeat="category in categories">-->
+                        <!--<button type="button" ng-click="setCategory(category.id)"-->
+                                <!--class="btn btn-info"></br>-->
+                            <!--{{category.name}}-->
+                        <!--</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</ul>-->
+        <!--</div>-->
+
+        <!--<div ng-controller="StoreController as store">-->
+            <!--<div class="col-md-3" ng-repeat="product in products | filter:catFilter">-->
+                <!--<div class="thumbnail" ng-controller="AddToCartController">-->
+                    <!--<div class="caption">-->
+                        <!--<img src="http://buyersguide.caranddriver.com/media/assets/submodel/280_7568.jpg">-->
+                        <!--<h3>Code: {{product.code}}</h3>-->
+                        <!--<h4>Price: {{product.price}}</h4>-->
+                        <!--<a href="#/product{{product.id}}"-->
+                           <!--class="btn btn-default"-->
+                           <!--role="button">Details</a></div>-->
+                    <!--</br>-->
+                    <!--<input type='text' placeholder="1" ng-model="quantity"/>-->
+                    <!--<button type="button"-->
+                            <!--ng-click="addProduct(product.id, quantity, product.price)">-->
+                        <!--Add to Cart-->
+                    <!--</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+</br></br></br>
+
+
+
+<div class="container-fluid" ng-controller="CategoryController as category">
+
+
+</br></br></br>
+
+<div class="row" >
+    <div class="col-md-3">
+        <h4 class="list-group-item-heading">Categories</h4>
+        <div class="row col-md-3 pull-left"   style="padding-top:1em;">
+            <!--<div class="row placeholders">-->
+            <div class="col-md-4">
+                <div class="list-group ">
+                    <div ng-repeat="category in categories">
+                        <a href="" ng-click="setCategory(category.id)">
+                            {{category.name}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Product Thumbnail -->
+    <div class="col-md-9" ng-controller="StoreController as store">
+        <div  ng-repeat="product in products | filter:catFilter">
+            <div class="col-md-4" ng-controller="AddToCartController">
+                <div class="thumbnail">
+                    <img src={{image_url[product.id%3]}} alt="thumb01">
+                    <div class="caption">
+                        <h3>Code: {{product.code}}</h3>
+                        <p>Price: {{product.price}}</p>
+                        <a href="#/product{{product.id}}"
+                           class="btn btn-default"
+                           role="button">Details</a></div>
+                    <input type='text' value="1" ng-model="qty"/>
+                    <button type="button"
+                            ng-click="addProduct(product.id, qty, product.price)">
+                        Add to Cart
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
