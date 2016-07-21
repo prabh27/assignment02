@@ -93,3 +93,16 @@ class OrdersSerializer(serializers.ModelSerializer):
                                          order_date=strftime("%Y-%m-%d", gmtime()),
                                          status=validated_data['status'])
 
+    def update(self, instance, validated_data):
+        if 'customer' in validated_data.keys():
+            cust, created = Customers.objects.get_or_create(customer_name=validated_data.get('customer')['customer_name'])
+            instance.customer_id = cust.customer_id
+            if 'address' in validated_data.get('customer'):
+                cust.address = validated_data.get('customer')['address_line1']
+                del validated_data.get('customer')['address_line1']
+            del validated_data['customer']
+            cust.save()
+        for key in validated_data:
+            setattr(instance, key, validated_data[key])
+        instance.save()
+        return instance
