@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>findbugs.extension.tutorial</groupId>
+	<artifactId>findbugs.extension.tutorial</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>FindBugs Extension Tutorial</name>
+	<description>A few simple detectors to show how to write a FindBugs plugin.</description>
+	<scm>
+		<connection>scm:hg:https://bitbucket.org/rewbs/findbugs.extension.tutorial</connection>
+		<url>https://bitbucket.org/rewbs/findbugs.extension.tutorial</url>
+	</scm>
+
+	<dependencies>
+	<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/findbugs-maven-plugin -->
+	<dependency>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>findbugs-maven-plugin</artifactId>
+		<version>3.0.4</version>
+	</dependency>
+
+	</dependencies>
+
+	<build>
+		<!-- To define the plugin version in your parent POM -->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.5</source>
+						<target>1.5</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>findbugs-maven-plugin</artifactId>
+					<version>3.0.4</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.4</version>
+			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+        </plugins>
+	</build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.4</version>
+                <configuration>
+                    <!--<pluginList>/Users/siddhanthgupta/findbugsPlugins/pluginpackage/myplugin.jar</pluginList>-->
+                    <pluginList>/Users/prabh/Library/Application\ Support/IdeaIC2016.1/FindBugs-IDEA-1.0.0/customPlugins/findbugs.extension.tutorial-0.0.1-SNAPSHOT.jar</pluginList>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.6</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+
+</project>

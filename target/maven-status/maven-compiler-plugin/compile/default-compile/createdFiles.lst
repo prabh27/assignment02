@@ -1,0 +1,12 @@
+org/soal/findbugs/tutorial/DemoDetector5.class
+org/soal/findbugs/tutorial/testdata/TestClass2.class
+org/soal/findbugs/tutorial/DemoDetector6.class
+org/soal/findbugs/tutorial/DemoDetector4.class
+org/soal/findbugs/tutorial/DemoDetector7.class
+org/soal/findbugs/tutorial/testdata/TestClass3.class
+org/soal/findbugs/tutorial/examples/BuggyBigDec.class
+org/soal/findbugs/tutorial/examples/BuggyString.class
+org/soal/findbugs/tutorial/DemoDetector3.class
+org/soal/findbugs/tutorial/DemoDetector2.class
+org/soal/findbugs/tutorial/DemoDetector1.class
+org/soal/findbugs/tutorial/testdata/TestClass1.class

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   				xsi:noNamespaceSchemaLocation="findbugsplugin.xsd"
+				pluginid="DEMO.findbugs.plugin"
+                defaultenabled="true"
+                provider="DEMO" 
+                website="http://soal.org/">
+                
+  <Detector class="org.soal.findbugs.tutorial.DemoDetector1" speed="fast" reports="DEMO_BUG_1"/>
+  <Detector class="org.soal.findbugs.tutorial.DemoDetector2" speed="fast" reports="DEMO_BUG_2"/>
+  <Detector class="org.soal.findbugs.tutorial.DemoDetector3" speed="fast" reports="DEMO_BUG_3"/>
+  <Detector class="org.soal.findbugs.tutorial.DemoDetector4" speed="fast" reports="DEMO_BUG_4"/>
+  <Detector class="org.soal.findbugs.tutorial.DemoDetector5" speed="fast" reports="DEMO_BUG_5"/>
+  <Detector class="org.soal.findbugs.tutorial.DemoDetector6" speed="fast" reports="DEMO_BUG_6"/>
+  <Detector class="org.soal.findbugs.tutorial.DemoDetector7" speed="fast" reports="DEMO_BUG_7"/>
+
+
+  <BugPattern type="DEMO_BUG_1" abbrev="DEMO" category="BAD_PRACTICE" />
+  <BugPattern type="DEMO_BUG_2" abbrev="DEMO" category="BAD_PRACTICE" />
+  <BugPattern type="DEMO_BUG_3" abbrev="DEMO" category="BAD_PRACTICE" />
+  <BugPattern type="DEMO_BUG_4" abbrev="DEMO" category="BAD_PRACTICE" />
+  <BugPattern type="DEMO_BUG_5" abbrev="DEMO" category="BAD_PRACTICE" />
+  <BugPattern type="DEMO_BUG_6" abbrev="DEMO" category="BAD_PRACTICE" />
+  <BugPattern type="DEMO_BUG_7" abbrev="DEMO" category="BAD_PRACTICE" />
+
+
+</FindbugsPlugin>
